@@ -1,15 +1,19 @@
 services:
   - type: web
     name: openwebui
-    envs:
-      groups:
-        - GITHUB_OAUTH_CLIENT_ID: $GITHUB_OAUTH_CLIENT_ID
-        - GITHUB_OAUTH_CLIENT_SECRET: $GITHUB_OAUTH_CLIENT_SECRET
-        - FLASK_ENV: production
-        - FLASK_APP: app:app
-        - FLASK_RUN_HOST: 0.0.0.0
-        - FLASK_RUN_PORT: 8000
-    build:
-      dockerfilePath: Dockerfile
-    start:
-      command: gunicorn app:app --bind 0.0.0.0:8000 --workers 4
+    envVars:
+      - key: GITHUB_OAUTH_CLIENT_ID
+        value: $GITHUB_OAUTH_CLIENT_ID
+      - key: GITHUB_OAUTH_CLIENT_SECRET
+        value: $GITHUB_OAUTH_CLIENT_SECRET
+      - key: FLASK_ENV
+        value: production
+      - key: FLASK_APP
+        value: app:app
+      - key: FLASK_RUN_HOST
+        value: 0.0.0.0
+      - key: FLASK_RUN_PORT
+        value: 8000
+    dockerfilePath: Dockerfile
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:8000 --workers 4
