@@ -1,1 +1,21 @@
-
+services:
+  - type: chr
+    name: openwebui
+    envs:
+      groups:
+        - GITHUB_OAUTH_CLIENT_ID: $GITHUB_OAUTH_CLIENT_ID
+        - GITHUB_OAUTH_CLIENT_SECRET: $GITHUB_OAUTH_CLIENT_SECRET
+        - FLASK_ENV: production
+        - FLASK_APP: app:app
+        - FLASK_RUN_HOST: 0.0.0.0
+        - FLASK_RUN_PORT: 8000
+    dependencies:
+      - pip install flask gunicorn
+    docker:
+      - FROM python:3.9-slim
+      - WORKDIR /app
+      - COPY . /app/
+      - RUN pip install -r requirements.txt
+    commands:
+      - poetry install (如果你使用poetry)
+      - gunicorn app:app --bind 0.0.0.0:8000 --workers 4
